@@ -4,9 +4,9 @@ import (
 	"context"
 
 	"github.com/99designs/gqlgen/graphql"
-	"github.com/yourusername/lcp-project/internal/domain/lcp"
-	"github.com/yourusername/lcp-project/internal/usecase/lcp/license"
-	"github.com/yourusername/lcp-project/internal/usecase/lcp/publication"
+	"github.com/Mehrbod2002/lcp/internal/domain/lcp"
+	"github.com/Mehrbod2002/lcp/internal/usecase/lcp/license"
+	"github.com/Mehrbod2002/lcp/internal/usecase/lcp/publication"
 )
 
 // Resolver is the main resolver struct

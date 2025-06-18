@@ -6,9 +6,9 @@ import (
 	"os"
 	"time"
 
+	"github.com/Mehrbod2002/lcp/internal/domain/lcp"
+	"github.com/Mehrbod2002/lcp/internal/lcp/encrypt"
 	"github.com/google/uuid"
-	"github.com/yourusername/lcp-project/internal/domain/lcp"
-	"github.com/yourusername/lcp-project/internal/lcp/encrypt"
 )
 
 type PublicationUsecase interface {

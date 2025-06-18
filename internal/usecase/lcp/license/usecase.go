@@ -4,9 +4,9 @@ import (
 	"context"
 	"time"
 
+	"github.com/Mehrbod2002/lcp/internal/domain/lcp"
 	"github.com/google/uuid"
 	"github.com/readium/readium-lcp-server/lcpserver"
-	"github.com/yourusername/lcp-project/internal/domain/lcp"
 )
 
 type LicenseUsecase interface {

@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/Masterminds/squirrel"
+	"github.com/Mehrbod2002/lcp/internal/domain/lcp"
 	"github.com/jackc/pgx/v5"
-	"github.com/yourusername/lcp-project/internal/domain/lcp"
 )
 
 type PublicationRepository interface {

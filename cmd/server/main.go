@@ -3,19 +3,18 @@ package main
 import (
 	"context"
 
+	"github.com/Mehrbod2002/lcp.git/internal/adapter/jwt"
 	"github.com/Mehrbod2002/lcp.git/internal/adapter/repository/lcp"
+	"github.com/Mehrbod2002/lcp.git/internal/config"
+	"github.com/Mehrbod2002/lcp.git/internal/usecase/lcp/license"
+	"github.com/Mehrbod2002/lcp.git/internal/usecase/lcp/publication"
 	"github.com/gofiber/adaptor/v2"
 	"github.com/gofiber/fiber/v2"
 	"github.com/jackc/pgx/v5"
 	"github.com/readium/readium-lcp-server/lcpencrypt"
 	"github.com/readium/readium-lcp-server/lcpserver"
-	"github.com/swaggo/fiber-swagger"
+	fiberSwagger "github.com/swaggo/fiber-swagger"
 	_ "github.com/swaggo/swag/example/celler/httputil"
-	"github.com/yourusername/lcp-project/internal/adapter/graphql"
-	"github.com/yourusername/lcp-project/internal/adapter/jwt"
-	"github.com/yourusername/lcp-project/internal/config"
-	"github.com/yourusername/lcp-project/internal/usecase/lcp/license"
-	"github.com/yourusername/lcp-project/internal/usecase/lcp/publication"
 )
 
 // @title LCP License Server API
