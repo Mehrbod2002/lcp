@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/99designs/gqlgen/graphql"
-	"github.com/Mehrbod2002/lcp/internal/domain/lcp"
 	"github.com/Mehrbod2002/lcp/internal/usecase/lcp/license"
 	"github.com/Mehrbod2002/lcp/internal/usecase/lcp/publication"
 )
