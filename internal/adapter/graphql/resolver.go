@@ -8,7 +8,6 @@ import (
 	"github.com/Mehrbod2002/lcp/internal/usecase/lcp/publication"
 )
 
-// Resolver is the main resolver struct
 type Resolver struct {
 	PublicationUsecase publication.PublicationUsecase
 	LicenseUsecase     license.LicenseUsecase
