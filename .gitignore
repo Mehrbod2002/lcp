@@ -1,1 +1,4 @@
 go.sum
+**/*wal
+**/*shm
+**/*test*pem
