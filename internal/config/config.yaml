@@ -1,4 +1,4 @@
-profile: basic  # Use "1.0" for production with EDRLab certs
+profile: basic  # Use "1.0" for production with EDRLab
 lcp:
   host: "0.0.0.0"
   port: 8989
