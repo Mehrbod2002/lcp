@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/Mehrbod2002/lcp/internal/domain/lcp"
-	"github.com/google/uuid"
-	"github.com/readium/readium-lcp-server/lcpserver"
+	lcplicense "github.com/Mehrbod2002/lcp/internal/lcp/license"
+	"github.com/Mehrbod2002/lcp/internal/pkg/id"
 )
 
 type LicenseUsecase interface {
@@ -17,16 +17,16 @@ type LicenseUsecase interface {
 
 type licenseUsecase struct {
 	repo lcp.LicenseRepository
-	lcp  *lcpserver.LCPServer
+	lcp  *lcplicense.Service
 }
 
-func NewLicenseUsecase(repo lcp.LicenseRepository, lcp *lcpserver.LCPServer) LicenseUsecase {
+func NewLicenseUsecase(repo lcp.LicenseRepository, lcp *lcplicense.Service) LicenseUsecase {
 	return &licenseUsecase{repo, lcp}
 }
 
 func (u *licenseUsecase) Create(ctx context.Context, input *lcp.LicenseInput) (*lcp.License, error) {
 	license := &lcp.License{
-		ID:             uuid.New().String(),
+		ID:             id.New(),
 		PublicationID:  input.PublicationID,
 		UserID:         input.UserID,
 		Passphrase:     input.Passphrase,
