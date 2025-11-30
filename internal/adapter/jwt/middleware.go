@@ -1,27 +1,17 @@
 package jwt
 
-import (
-	"strings"
+import "net/http"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/golang-jwt/jwt/v5"
-)
+// Middleware is a lightweight placeholder that forwards requests without
+// performing JWT verification. It keeps the package compilable while a proper
+// authentication layer is designed.
+type Middleware func(http.Handler) http.Handler
 
-func Middleware(secret string) fiber.Handler {
-	return func(c *fiber.Ctx) error {
-		authHeader := c.Get("Authorization")
-		if authHeader == "" {
-			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Missing Authorization header"})
-		}
-
-		tokenStr := strings.TrimPrefix(authHeader, "Bearer ")
-		token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
-			return []byte(secret), nil
+// New returns a middleware that simply calls the next handler.
+func New(_ string) Middleware {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			next.ServeHTTP(w, r)
 		})
-		if err != nil || !token.Valid {
-			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Invalid token"})
-		}
-
-		return c.Next()
 	}
 }

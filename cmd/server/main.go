@@ -1,20 +1,15 @@
 package main
 
 import (
-	"context"
+	"net/http"
 
-	"github.com/Mehrbod2002/lcp.git/internal/adapter/jwt"
-	"github.com/Mehrbod2002/lcp.git/internal/adapter/repository/lcp"
-	"github.com/Mehrbod2002/lcp.git/internal/config"
-	"github.com/Mehrbod2002/lcp.git/internal/usecase/lcp/license"
-	"github.com/Mehrbod2002/lcp.git/internal/usecase/lcp/publication"
-	"github.com/gofiber/adaptor/v2"
-	"github.com/gofiber/fiber/v2"
-	"github.com/jackc/pgx/v5"
-	"github.com/readium/readium-lcp-server/lcpencrypt"
-	"github.com/readium/readium-lcp-server/lcpserver"
-	fiberSwagger "github.com/swaggo/fiber-swagger"
-	_ "github.com/swaggo/swag/example/celler/httputil"
+	"github.com/Mehrbod2002/lcp/internal/adapter/graphql"
+	"github.com/Mehrbod2002/lcp/internal/adapter/repository/lcp"
+	"github.com/Mehrbod2002/lcp/internal/config"
+	lcpencrypt "github.com/Mehrbod2002/lcp/internal/lcp/encrypt"
+	lcplicense "github.com/Mehrbod2002/lcp/internal/lcp/license"
+	"github.com/Mehrbod2002/lcp/internal/usecase/lcp/license"
+	"github.com/Mehrbod2002/lcp/internal/usecase/lcp/publication"
 )
 
 // @title LCP License Server API
@@ -31,31 +26,27 @@ func main() {
 		panic(err)
 	}
 
-	db, err := pgx.Connect(context.Background(), cfg.Database.DSN)
-	if err != nil {
-		panic(err)
-	}
-	defer db.Close(context.Background())
-
-	lcpEnc := lcpencrypt.NewEncrypter(cfg.LCP.Certificate, cfg.LCP.PrivateKey, cfg.LCP.Storage)
-	lcpSrv := lcpserver.NewServer(cfg.LCP)
-	pubRepo := lcp.NewPublicationRepository(db)
-	licRepo := lcp.NewLicenseRepository(db)
+	lcpEnc := lcpencrypt.NewFileCopyEncrypter(cfg.LCP.Storage.FS.Directory)
+	lcpSrv := lcplicense.NewService()
+	pubRepo := lcp.NewPublicationRepository()
+	licRepo := lcp.NewLicenseRepository()
 	pubUsecase := publication.NewPublicationUsecase(pubRepo, lcpEnc)
 	licUsecase := license.NewLicenseUsecase(licRepo, lcpSrv)
 
-	app := fiber.New()
-	app.Use(jwt.Middleware(cfg.JWT.Secret))
+	mux := http.NewServeMux()
 
-	// GraphQL endpoint
 	gqlHandler := graphql.NewHandler(&graphql.Resolver{
 		PublicationUsecase: pubUsecase,
 		LicenseUsecase:     licUsecase,
 	})
-	app.Post("/graphql", adaptor.HTTPHandler(gqlHandler))
+	mux.Handle("/graphql", gqlHandler)
 
-	// Swagger endpoint
-	app.Get("/swagger/*", fiberSwagger.WrapHandler)
+	port := cfg.Server.Port
+	if port == "" {
+		port = ":8080"
+	}
 
-	app.Listen(cfg.Server.Port)
+	if err := http.ListenAndServe(port, mux); err != nil {
+		panic(err)
+	}
 }

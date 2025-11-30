@@ -8,7 +8,7 @@ import (
 
 	"github.com/Mehrbod2002/lcp/internal/domain/lcp"
 	"github.com/Mehrbod2002/lcp/internal/lcp/encrypt"
-	"github.com/google/uuid"
+	"github.com/Mehrbod2002/lcp/internal/pkg/id"
 )
 
 type PublicationUsecase interface {
@@ -46,7 +46,7 @@ func (u *publicationUsecase) UploadAndEncrypt(ctx context.Context, title string,
 
 	// Store publication metadata
 	pub := &lcp.Publication{
-		ID:            uuid.New().String(),
+		ID:            id.New(),
 		Title:         title,
 		FilePath:      tempPath,
 		EncryptedPath: encryptedPath,
