@@ -6,6 +6,7 @@ import "context"
 type PublicationRepository interface {
 	Save(ctx context.Context, pub *Publication) error
 	FindAll(ctx context.Context) ([]*Publication, error)
+	FindByID(ctx context.Context, id string) (*Publication, error)
 }
 
 // LicenseRepository describes the persistence operations for licenses.

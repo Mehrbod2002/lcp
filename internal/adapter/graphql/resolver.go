@@ -1,87 +1,13 @@
 package graphql
 
 import (
-	"context"
-	"time"
-
-	"github.com/Mehrbod2002/lcp/internal/domain/lcp"
 	usecaseLicense "github.com/Mehrbod2002/lcp/internal/usecase/lcp/license"
 	usecasePublication "github.com/Mehrbod2002/lcp/internal/usecase/lcp/publication"
 )
 
+// Resolver aggregates the use cases needed by the GraphQL layer.
 type Resolver struct {
 	PublicationUsecase usecasePublication.PublicationUsecase
 	LicenseUsecase     usecaseLicense.LicenseUsecase
-}
-
-func (r *Resolver) Query() QueryResolver {
-	return &queryResolver{r}
-}
-
-func (r *Resolver) Mutation() MutationResolver {
-	return &mutationResolver{r}
-}
-
-type queryResolver struct{ *Resolver }
-
-func (r *queryResolver) Publications(ctx context.Context) ([]*lcp.Publication, error) {
-	return r.PublicationUsecase.GetAll(ctx)
-}
-
-func (r *queryResolver) Licenses(ctx context.Context, publicationID *string) ([]*lcp.License, error) {
-	return r.LicenseUsecase.GetByPublication(ctx, publicationID)
-}
-
-type mutationResolver struct{ *Resolver }
-
-func (r *mutationResolver) UploadPublication(ctx context.Context, title string, file Upload) (*lcp.Publication, error) {
-	return r.PublicationUsecase.UploadAndEncrypt(ctx, title, file.File)
-}
-
-func (r *mutationResolver) CreateLicense(ctx context.Context, input struct {
-	PublicationID string
-	UserID        string
-	Passphrase    string
-	Hint          string
-	RightPrint    *int
-	RightCopy     *int
-	StartDate     *string
-	EndDate       *string
-}) (*lcp.License, error) {
-	startDate, err := parseTimePtr(input.StartDate)
-	if err != nil {
-		return nil, err
-	}
-
-	endDate, err := parseTimePtr(input.EndDate)
-	if err != nil {
-		return nil, err
-	}
-
-	return r.LicenseUsecase.Create(ctx, &lcp.LicenseInput{
-		PublicationID: input.PublicationID,
-		UserID:        input.UserID,
-		Passphrase:    input.Passphrase,
-		Hint:          input.Hint,
-		RightPrint:    input.RightPrint,
-		RightCopy:     input.RightCopy,
-		StartDate:     startDate,
-		EndDate:       endDate,
-	})
-}
-
-func (r *mutationResolver) RevokeLicense(ctx context.Context, id string) (bool, error) {
-	err := r.LicenseUsecase.Revoke(ctx, id)
-	return err == nil, err
-}
-
-func parseTimePtr(value *string) (*time.Time, error) {
-	if value == nil {
-		return nil, nil
-	}
-	parsed, err := time.Parse(time.RFC3339, *value)
-	if err != nil {
-		return nil, err
-	}
-	return &parsed, nil
+	PublicBaseURL      string
 }

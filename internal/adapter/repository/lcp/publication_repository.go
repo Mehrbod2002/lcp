@@ -10,6 +10,7 @@ import (
 type PublicationRepository interface {
 	Save(ctx context.Context, pub *lcp.Publication) error
 	FindAll(ctx context.Context) ([]*lcp.Publication, error)
+	FindByID(ctx context.Context, id string) (*lcp.Publication, error)
 }
 
 type publicationRepository struct {
@@ -34,4 +35,17 @@ func (r *publicationRepository) FindAll(ctx context.Context) ([]*lcp.Publication
 	pubs := make([]*lcp.Publication, len(r.publications))
 	copy(pubs, r.publications)
 	return pubs, nil
+}
+
+func (r *publicationRepository) FindByID(ctx context.Context, id string) (*lcp.Publication, error) {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+
+	for _, pub := range r.publications {
+		if pub.ID == id {
+			return pub, nil
+		}
+	}
+
+	return nil, nil
 }

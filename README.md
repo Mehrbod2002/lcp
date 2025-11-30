@@ -6,6 +6,7 @@ Lightweight License Content Protection (LCP) server that exposes GraphQL APIs fo
 - GraphQL endpoint at `/graphql` for managing publications and licenses.
 - Pluggable encryption interface (default file copy encrypter for development) to integrate with a full LCP DRM backend.
 - In-memory repositories that keep the service stateless for easy containerization.
+- Download endpoint at `/publications/{id}/content` for clients to retrieve encrypted assets using the URLs returned on licenses.
 - Deployment assets for Docker, Kubernetes (with Kustomize), and ArgoCD GitOps flows.
 - GitLab pipeline that lints, tests, builds, and deploys the container image.
 
@@ -20,6 +21,7 @@ Set the following environment variables (see `.env.example` for defaults):
 - `LCP_S3_REGION`, `LCP_S3_BUCKET`, `LCP_S3_ACCESS_KEY`, `LCP_S3_SECRET_KEY`: S3 storage settings when `LCP_STORAGE_MODE=s3`.
 - `JWT_SECRET`: Secret for future JWT-protected endpoints.
 - `SERVER_PORT`: Listen address (defaults to `:8080`).
+- `PUBLIC_BASE_URL`: Public base URL used to generate download links (defaults to `http://localhost:PORT`).
 
 ## Local development
 ```bash
@@ -29,6 +31,15 @@ export $(grep -v '^#' .env | xargs)
 go run ./cmd/server
 ```
 The GraphQL playground will be available at `http://localhost:8080/graphql`.
+
+### GraphQL upload notes
+The `uploadPublication` mutation expects the `file` argument as a **base64-encoded string**. Example variables:
+```json
+{
+  "title": "My Book",
+  "file": "<base64 encoded content>"
+}
+```
 
 ## Docker
 ```bash

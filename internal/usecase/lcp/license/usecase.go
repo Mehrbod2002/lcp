@@ -16,12 +16,13 @@ type LicenseUsecase interface {
 }
 
 type licenseUsecase struct {
-	repo lcp.LicenseRepository
-	lcp  *lcplicense.Service
+	repo    lcp.LicenseRepository
+	lcp     *lcplicense.Service
+	baseURL string
 }
 
-func NewLicenseUsecase(repo lcp.LicenseRepository, lcp *lcplicense.Service) LicenseUsecase {
-	return &licenseUsecase{repo, lcp}
+func NewLicenseUsecase(repo lcp.LicenseRepository, lcp *lcplicense.Service, baseURL string) LicenseUsecase {
+	return &licenseUsecase{repo: repo, lcp: lcp, baseURL: baseURL}
 }
 
 func (u *licenseUsecase) Create(ctx context.Context, input *lcp.LicenseInput) (*lcp.License, error) {
@@ -31,7 +32,7 @@ func (u *licenseUsecase) Create(ctx context.Context, input *lcp.LicenseInput) (*
 		UserID:         input.UserID,
 		Passphrase:     input.Passphrase,
 		Hint:           input.Hint,
-		PublicationURL: "http://yourdomain.com/storage/" + input.PublicationID,
+		PublicationURL: u.baseURL + "/publications/" + input.PublicationID + "/content",
 		RightPrint:     input.RightPrint,
 		RightCopy:      input.RightCopy,
 		StartDate:      input.StartDate,

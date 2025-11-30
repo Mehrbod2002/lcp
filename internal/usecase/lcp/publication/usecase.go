@@ -14,6 +14,7 @@ import (
 type PublicationUsecase interface {
 	UploadAndEncrypt(ctx context.Context, title string, file io.Reader) (*lcp.Publication, error)
 	GetAll(ctx context.Context) ([]*lcp.Publication, error)
+	GetByID(ctx context.Context, id string) (*lcp.Publication, error)
 }
 
 type publicationUsecase struct {
@@ -62,4 +63,8 @@ func (u *publicationUsecase) UploadAndEncrypt(ctx context.Context, title string,
 
 func (u *publicationUsecase) GetAll(ctx context.Context) ([]*lcp.Publication, error) {
 	return u.repo.FindAll(ctx)
+}
+
+func (u *publicationUsecase) GetByID(ctx context.Context, id string) (*lcp.Publication, error) {
+	return u.repo.FindByID(ctx, id)
 }

@@ -4,6 +4,7 @@ type Publication {
     filePath: String!
     encryptedPath: String
     createdAt: String!
+    downloadURL: String!
 }
 
 type License {

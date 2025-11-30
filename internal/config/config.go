@@ -29,7 +29,8 @@ type Config struct {
 		Secret string
 	}
 	Server struct {
-		Port string
+		Port          string
+		PublicBaseURL string
 	}
 }
 
@@ -47,5 +48,6 @@ func LoadConfig() (*Config, error) {
 	cfg.LCP.Storage.S3.SecretKey = os.Getenv("LCP_S3_SECRET_KEY")
 	cfg.JWT.Secret = os.Getenv("JWT_SECRET")
 	cfg.Server.Port = os.Getenv("SERVER_PORT")
+	cfg.Server.PublicBaseURL = os.Getenv("PUBLIC_BASE_URL")
 	return cfg, nil
 }
