@@ -13,7 +13,7 @@ Lightweight License Content Protection (LCP) server that exposes GraphQL APIs fo
 
 ## Configuration
 
-Set the following environment variables (see `.env.example` for defaults):
+Set the following environment variables (see `.env.example & .env.local` for defaults):
 
 - `DB_DSN`: Database connection string (used by adapters that expect persistent storage).
 - `LCP_PROFILE`: `basic` or `production`.
